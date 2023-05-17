@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import auth
 import models
 import schemas
-#import subprocess
+import subprocess
 #import os
 
 
@@ -18,6 +18,16 @@ def get_user(db: Session, user_id: int):
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
+def deploy_cluster(db:Session):
+    playbook = "/test/playbook.yml"
+    inventory = "/test/inventory.yml"
+    try :
+        subprocess.run(['ansible-playbook', playbook, '-i', inventory])
+    except subprocess.CalledProcessError as e:
+        return e.output + "failed"
+    else:
+        return "success"
+    
 
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = auth.get_password_hash(user.password)

@@ -57,6 +57,10 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), t
     users = crud_operations.get_users(db, skip=skip, limit=limit)
     return users
 
+@app.setup("/users/")
+def deploy_cluster(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    return crud_operations.deploy_cluster(db)
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud_operations.get_user_by_email(db, email=user.email)
