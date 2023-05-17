@@ -7,7 +7,6 @@ import schemas
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import auth
 from database import SessionLocal, engine
-from kubernetes import client, config
 
 
 print("We are in the main.......")
@@ -21,9 +20,6 @@ print("Tables created.......")
 
 app = FastAPI()
 
-config.load_incluster_config()
-
-k8s_client = client.CoreV1Api()
 
 
 # Dependency
@@ -60,20 +56,6 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     users = crud_operations.get_users(db, skip=skip, limit=limit)
     return users
-
-@app.post("/add_pod")
-async def add_pod(pod_manifest: dict):
-    pod = client.V1Pod()
-    pod.api_version = "v1"
-    pod.kind = "Pod"
-    pod.metadata = client.V1ObjectMeta(name=pod_manifest["name"])
-    pod.spec = client.V1PodSpec(containers=pod_manifest["containers"])
-
-    try:
-        response = k8s_client.create_namespaced_pod(namespace="default", body=pod)
-        return {"message": "Pod created successfully", "pod_name": response.metadata.name}
-    except client.rest.ApiException as e:
-        return {"message": f"Failed to create pod: {e.reason}"}
 
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
