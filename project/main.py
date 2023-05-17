@@ -57,7 +57,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), t
     users = crud_operations.get_users(db, skip=skip, limit=limit)
     return users
 
-@app.setup("/users/")
+@app.get("/users/playbook", response_model=str)
 def deploy_cluster(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     return crud_operations.deploy_cluster(db)
 
