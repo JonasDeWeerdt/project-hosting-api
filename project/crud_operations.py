@@ -18,9 +18,7 @@ def get_user(db: Session, user_id: int):
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
-def deploy_cluster(db:Session):
-    playbook = "/test/playbook.yml"
-    inventory = "/test/inventory.yml"
+def deploy_cluster(db:Session,playbook,inventory):
     try :
         subprocess.run(['ansible-playbook', playbook, '-i', inventory])
     except subprocess.CalledProcessError as e:

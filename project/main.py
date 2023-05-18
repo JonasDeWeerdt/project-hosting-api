@@ -58,7 +58,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), t
     return users
 
 @app.get("/users/playbook", response_model=str)
-def deploy_cluster(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+def deploy_cluster(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), playbook: str = None, inventory: str = None):
     return crud_operations.deploy_cluster(db)
 
 @app.post("/users/", response_model=schemas.User)
