@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 
 
-
-
 class UserBase(BaseModel):
     email: str
 
@@ -13,6 +11,8 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    uid: int
+    gid: int
     is_active: bool
 
     class Config:
