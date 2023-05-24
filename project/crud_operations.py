@@ -21,8 +21,8 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     response = {'ansible_user': user.email,
-                'ansible_uid': db.query(models.User).filter(models.User.id == user.id),
-                'ansible_gid': db.query(models.User).filter(models.User.id == user.id),
+                'ansible_uid': db.query(models.User).filter(models.User.id == user.id).get('uid'),
+                'ansible_gid': db.query(models.User).filter(models.User.id == user.id).get('gid'),
                 'ansible_password': user.password}
 
     playbook_path = "ansible/playbook.yml"
