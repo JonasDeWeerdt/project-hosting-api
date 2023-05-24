@@ -30,9 +30,6 @@ def deploy_cluster(db:Session,playbook,inventory):
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = auth.get_password_hash(user.password)
     db_user = models.User(email=user.email, hashed_password=hashed_password)
-    #home_dir = "/home/" + user.email
-    #subprocess.run(['sudo', 'useradd', '-m', user.email])
-    #subprocess.run(['sudo', 'chpasswd'], input=f"{user.email}:{user.password}", encoding='utf-8')
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
