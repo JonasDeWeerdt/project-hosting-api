@@ -5,7 +5,7 @@ import models
 import schemas
 import subprocess
 
-
+ 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
@@ -21,8 +21,8 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     response = {'ansible_user': user.email,
-                'ansible_uid': db.query(models.User).filter(models.User.id == user.id).get('uid'),
-                'ansible_gid': db.query(models.User).filter(models.User.id == user.id).get('gid'),
+                'ansible_uid': db.query(models.User).filter(models.User.id == user.id).get('uid')+1,
+                'ansible_gid': db.query(models.User).filter(models.User.id == user.id).get('gid')+1,
                 'ansible_password': user.password}
 
     playbook_path = "ansible/playbook.yml"
