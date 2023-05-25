@@ -11,8 +11,6 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    uid: int
-    gid: int
     is_active: bool
 
     class Config:
