@@ -20,11 +20,6 @@ print("Tables created.......")
 
 app = FastAPI()
 
-db = SessionLocal()
-user = [{"id": "string", "password": "string", "uid": 2001, "gid": 2001}]
-db.add(user)
-db.commit()
-
 
  
 # Dependency
@@ -80,3 +75,9 @@ def change_password(user: schemas.UserCreate, db: Session = Depends(get_db), tok
     return crud_operations.set_password(db=db, user=user)
 
 
+@app.on_event("startup")
+async def populate_users_table(db: Session = Depends(get_db)):
+    # Add your logic to populate the users table with initial data
+    user = [{"id": "1","email":"string", "password": "string", "uid": 2001, "gid": 2001}]
+    db.add(user)
+    db.commit()
