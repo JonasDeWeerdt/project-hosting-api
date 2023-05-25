@@ -20,6 +20,10 @@ print("Tables created.......")
 
 app = FastAPI()
 
+db = SessionLocal()
+user = [{"id": "string", "password": "string", "uid": 2001, "gid": 2001}]
+db.add(user)
+db.commit()
 
 
  

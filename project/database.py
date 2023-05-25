@@ -9,9 +9,5 @@ engine = create_engine(
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-db = SessionLocal()
-user = [{"id": "string", "password": "string", "uid": 2001, "gid": 2001}]
-db.add(user)
-db.commit()
 
 Base = declarative_base()
