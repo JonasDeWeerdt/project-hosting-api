@@ -25,8 +25,8 @@ def create_user(db: Session, user: schemas.UserCreate):
                 'ansible_gid': db.query(models.User).filter(models.User.id == user.id).get('gid')+1,
                 'ansible_password': user.password}
 
-    playbook_path = "ansible/playbook.yml"
-    ansible_command = f"ansible-playbook {playbook_path} --extra-vars="
+    playbook_path = "ansible_user/playbook.yml"
+    ansible_command = f"ansible-playbook {playbook_path} --extra-vars={response}"
     try:
         # Execute the Ansible playbook command
         subprocess.run(ansible_command, shell=True, check=True)
@@ -37,7 +37,14 @@ def create_user(db: Session, user: schemas.UserCreate):
         # Handle the error appropriately (e.g., logging, error response, etc.)
         # You can access the error message through e.stderr
         raise Exception(f"Failed to run Ansible playbook: {e.stderr}")
-
+    
+def deploy_cluster(db:Session,playbook,inventory):
+    try :
+        subprocess.run(['ansible-playbook', playbook, '-i', inventory])
+    except subprocess.CalledProcessError as e:
+        return e.output + "failed"
+    else:
+        return "success"
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
