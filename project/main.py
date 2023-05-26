@@ -21,7 +21,7 @@ print("Tables created.......")
 app = FastAPI()
 
 
- 
+
 # Dependency
 def get_db():
     db = SessionLocal()
